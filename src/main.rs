@@ -27,11 +27,9 @@ fn parse_vtt(vtt_file: &std::fs::File) -> Vec<subs::SubTrack> {
                 else if !timestamps.is_none() && line != "" {
                     subtitles.push(line);
                 } else if !timestamps.is_none() && line == "" {
-                    let stamps = timestamps.clone().unwrap();
                     tracks.push(
                         subs::SubTrack{
-                            time_start: stamps.0.clone(),
-                            time_end: stamps.1.clone(),
+                            timestamps: timestamps.unwrap(),
                             subtitles: subtitles.clone().join("\n")
                         }
                     );
@@ -58,13 +56,11 @@ mod tests {
     #[test]
     fn parse_vtt_test() {
         let expected1 = subs::SubTrack {
-            time_start: String::from("00:01:14.815"),
-            time_end: String::from("00:01:18.114"),
+            timestamps: (String::from("00:01:18.114"), String::from("00:01:14.815")),
             subtitles: String::from("- What?\n- Where are we now?")
         };
         let expected2 = subs::SubTrack {
-            time_start: String::from("00:01:18.171"),
-            time_end: String::from("00:01:20.991"),
+            timestamps: (String::from("00:01:18.171"), String::from("00:01:20.991")),
             subtitles: String::from("- This is big bat country.")
         };
         let test_file = std::fs::File::open("./src/tests/multi_line_cues.vtt")
@@ -72,12 +68,10 @@ mod tests {
 
         let parsed = parse_vtt(&test_file);
 
-        assert_eq!(expected1.time_start, parsed[0].time_start);
-        assert_eq!(expected1.time_end, parsed[0].time_end);
+        assert_eq!(expected1.timestamps, parsed[0].timestamps);
         assert_eq!(expected1.subtitles, parsed[0].subtitles);
 
-        assert_eq!(expected2.time_start, parsed[1].time_start);
-        assert_eq!(expected2.time_end, parsed[1].time_end);
+        assert_eq!(expected2.timestamps, parsed[1].timestamps);
         assert_eq!(expected2.subtitles, parsed[1].subtitles);
     }
 }
