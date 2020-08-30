@@ -1,6 +1,7 @@
 mod subs;
 mod parser;
 mod parser_test;
+mod writer;
 
 
 fn main() {

@@ -1,11 +1,11 @@
-use crate::subs;
-use std::io::{self, prelude::*, BufReader};
+use crate::subs::{SubTrack};
+use std::io::{prelude::*, BufReader};
 use lazy_static::lazy_static;
 use regex::Regex;
 
 pub trait Parser {
   fn new() -> Self;
-  fn parse(&self, file: &std::fs::File) -> Vec<subs::SubTrack>;
+  fn parse(&self, file: &std::fs::File) -> Vec<SubTrack>;
 }
 
 pub struct VttParser {}
@@ -26,7 +26,7 @@ impl Parser for VttParser {
     VttParser {}
   }
 
-  fn parse(&self, file: &std::fs::File) -> Vec<subs::SubTrack> {
+  fn parse(&self, file: &std::fs::File) -> Vec<SubTrack> {
     let reader = BufReader::new(file);
     let mut timestamps: Option<(String, String)> = None;
     let mut subtitles: Vec<String> = Vec::new();
@@ -42,7 +42,7 @@ impl Parser for VttParser {
                     subtitles.push(line);
                 } else if !timestamps.is_none() && line == "" {
                     tracks.push(
-                        subs::SubTrack{
+                        SubTrack{
                             timestamps: timestamps.unwrap(),
                             subtitles: subtitles.clone().join("\n")
                         }
