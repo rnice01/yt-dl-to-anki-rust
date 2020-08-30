@@ -56,7 +56,7 @@ mod tests {
     #[test]
     fn parse_vtt_test() {
         let expected1 = subs::SubTrack {
-            timestamps: (String::from("00:01:18.114"), String::from("00:01:14.815")),
+            timestamps: (String::from("00:01:14.815"), String::from("00:01:18.114")),
             subtitles: String::from("- What?\n- Where are we now?")
         };
         let expected2 = subs::SubTrack {
